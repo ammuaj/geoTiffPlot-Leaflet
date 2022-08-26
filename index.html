@@ -1,5 +1,8 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" xmlns="http://www.w3.org/1999/html"
-      xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"/>
+      xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+      xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+      xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+      xmlns="http://www.w3.org/1999/html"/>
 
 <link rel="stylesheet" href="./vendor/custom_style.css">
 <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
@@ -22,9 +25,39 @@
 
 <div>
     <div id = "leftmenu" style="width:15%;float:left;">
-        <h1>GeoTiff Plot Demo</h1>
+        <h2>GeoTiff Rendering Demo</h2>
         <!--Clip the image using a polygon <button type="button" onclick="toggleClip()">Toggle</button></p> -->
-        Select a color scale
+        Select a site
+        <select onchange="compareBand2(this)"s>
+            <option selected="" value="site-1">Site-1</option>
+            <option value="viridis">Site-2</option>
+            <option value="greys">Site-3</option>
+        </select>
+        </br>
+        </br>
+        Select a county
+        <select onchange="compareBand2(this)"s>
+            <option selected="" value="county-1">County-1</option>
+            <option value="viridis">Country-2</option>
+            <option value="greys">Country-3</option>
+        </select>
+        </br>
+        </br>
+
+        How many bands to compare?
+        <select onchange="splitCompDivs(this)">
+            <option selected="" value="0">None</option>
+            <option value="2">Two</option>
+            <option value="4">Four</option>
+
+        </select>
+        </br>
+        </br>
+        </br>
+        Control Panel for Map-1
+        <hr>
+
+        Color scale
         <select onchange="changeColorScale(this)">
             <option selected="" value="rainbow">Rainbow</option>
             <option value="viridis">Viridis</option>
@@ -40,56 +73,56 @@
 
         </select>
         <img id="colorScaleImage" src="" style="vertical-align: middle; height:20px; width:200px;"/> </p>
+        <output style="float: left; margin-top:-10px;" id="range_ET_disp_Min"></output>
 
-        <label for="tif_alpha">Plot Opacity: </label>
-        <input type="range" name="weight" id="tif_alpha" value="80" min="0" max="255" onchange="changeAlpha(this)" >
-        <output  id="tif_alpha_disp"></output>
+        <output style="float: right; margin-top:-10px;margin-right:15px;"  id="range_ET_disp_colorascale_max" ></output>
 
         </br>
-        </br>
+
 <!--        -->
 <!--        ET value at clicked point is <span id="ET_value">?</span></p>-->
 <!--        LST value at clicked point is <span id="LST_value">?</span></p>-->
-        <label for="range_ET">Min ET Value: </label>
+
+        <label for="range_ET">Min: </label>
         <input type="range" name="weight" id="range_ET" value="1" min="1" max="100" onchange="changeETRange(this)" >
         <output  id="range_ET_disp"></output>
 
         </br>
-        <label for="range_ET">Max ET Value: </label>
+        </br>
+        <label for="range_ET">Max: </label>
         <input type="range" name="weight" id="range_ET_Max" value="1" min="1" max="100" onchange="changeETRange(this)" >
         <output  id="range_ET_disp_Max"></output>
 
+        </br>
+        </br>
+        <label for="tif_alpha">Opacity:</label>
+        <input type="range" name="weight" id="tif_alpha" value="80" min="0" max="255" onchange="changeAlpha(this)" >
+        <output  id="tif_alpha_disp"></output>
+        <hr>
 
         </br>
         </br>
-        How many bands to compare?
-        <select onchange="splitCompDivs(this)">
-            <option selected="" value="0">None</option>
-            <option value="2">Two</option>
-            <option value="4">Four</option>
 
-        </select>
-        </br>
-        </br>
-        Select 2nd Band:
-        <select onchange="compareBand2(this)">
-            <option selected="" value="0">None</option>
-            <option value="2">Band 1 (ET)</option>
-            <option value="2">Band 2 (LST)</option>
-            <option value="2">Band 3 (LST)</option>
 
-        </select>
-        </br>
-        </br>
+<!--        Select 2nd Band:-->
+<!--        <select onchange="compareBand2(this)">-->
+<!--            <option selected="" value="0">None</option>-->
+<!--            <option value="2">Band 1 (ET)</option>-->
+<!--            <option value="2">Band 2 (LST)</option>-->
+<!--            <option value="2">Band 3 (LST)</option>-->
 
-        Select 3rd Band :
-        <select onchange="compareBand2(this)">
-            <option selected="" value="0">None</option>
-            <option value="2">Band 1 (ET)</option>
-            <option value="2">Band 2 (LST)</option>
-            <option value="2">Band 3 (LST)</option>
+<!--        </select>-->
+<!--        </br>-->
+<!--        </br>-->
 
-        </select>
+<!--        Select 3rd Band :-->
+<!--        <select onchange="compareBand2(this)">-->
+<!--            <option selected="" value="0">None</option>-->
+<!--            <option value="2">Band 1 (ET)</option>-->
+<!--            <option value="2">Band 2 (LST)</option>-->
+<!--            <option value="2">Band 3 (LST)</option>-->
+
+<!--        </select>-->
     </div>
 
 
@@ -143,7 +176,9 @@
         var val_Min = document.getElementById('range_ET').value;
         var val_Max = document.getElementById('range_ET_Max').value;
         document.getElementById("range_ET_disp").value = val_Min;
+        document.getElementById("range_ET_disp_Min").value = val_Min;
         document.getElementById("range_ET_disp_Max").value = val_Max;
+        document.getElementById("range_ET_disp_colorascale_max").value = val_Max;
 
         ET_value.setDisplayRange(val_Min,val_Max);
 
@@ -413,6 +448,9 @@
     slider_Max.setAttribute('min', ET_value.options.displayMin);
     slider_Max.setAttribute('max', ET_value.options.displayMax);
     slider_Max.value = ET_value.options.displayMax;
+
+    document.getElementById("range_ET_disp_Min").value = ET_value.options.displayMin;
+    document.getElementById("range_ET_disp_colorascale_max").value = ET_value.options.displayMax;
 
     
     mymap.on('click', function(e){
