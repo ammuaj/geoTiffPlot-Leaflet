@@ -67,7 +67,8 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
     },
     _getData: function(url) {
         var self = this;
-        var request = new XMLHttpRequest();  
+        var request = new XMLHttpRequest();
+        console.log("url: "+url);
         request.onload = function() {
             if (this.status >= 200 && this.status < 400) {
                 self._parseTIFF(this.response);
